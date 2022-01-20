@@ -1,5 +1,6 @@
 library(dplyr) # for data wrangling
-library(tidytext) # for NLP
+library(tidytext)
+library(reactable)# for NLP
 library(plotly)
 library(stringr) # to deal with strings
 library(wordcloud) # to render wordclouds
