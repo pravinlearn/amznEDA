@@ -29,6 +29,8 @@ server <- function(input, output, session) {
   
   
   time_chart$init_server("time_chart",amzndfs = amzn)
+  
+  breakdown_chart$init_server("breakdown_chart")
   breakdown_charts$init_server("breakdown_charts",
                                amzndf = amzn)
   map_chart$init_server("map_chart",

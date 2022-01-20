@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    
+    
+    <style>
+        .chart-breakdown {
+    grid-column: 5 / 3 !important;
+}
+     .chart-mapet{
+           grid-column: 5 / 3 !important;
+
+       
+     }
+     
+     
+     
+    </style>
+    
+    
     <meta charset="utf-8" />
     <title>Enterprise Shiny Dashboard</title>
     <meta name="description" content="Enterprise Shiny Dashboard" />
@@ -38,6 +55,9 @@
         <div class="panel panel-chart chart-map">{{ countryMap }}</div>
         <div class="panel panel-chart chart-breakdown">{{ breakdownChart }}</div>
         <div class="panel panel-chart chart-breakdowns">{{ breakdownCharts }}</div>
+        <div class="panel panel-chart chart-mapet">{{ countryMapet }}</div>
+
+
 
       </section>
     </main>

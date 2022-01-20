@@ -38,6 +38,7 @@ htmlTemplate(
   breakdownChart = breakdown_chart$ui("breakdown_chart"),
   countryMap = map_chart$ui("map_chart"),
   breakdownCharts = breakdown_charts$ui("breakdown_charts"),
+  countryMapet = country_mapet$ui("country_mapet.R"),
   
   marketplace_website = consts$marketplace_website
 )
