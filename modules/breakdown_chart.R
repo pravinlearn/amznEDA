@@ -1,14 +1,21 @@
 # Ggplot horizontal bar chart module
 
+# Echarts4r map module
 import("shiny")
-import("tidyselect")
-import("lubridate")
-import("dplyr")
-import("utils")
-import("tidyr")
+import("echarts4r")
 import("ggplot2")
+import("htmlwidgets")
+import("dplyr")
+import("tidytext")
+import("textdata")
+import("tm")
+import("DT")
+import("stringr")
+import("utils")
 export("ui")
+import("reshape2")
 export("init_server")
+import("wordcloud")
 expose("utilities/getMetricsChoices.R")
 expose("utilities/getTimeFilterChoices.R")
 expose("utilities/getDataByTimeRange.R")
@@ -16,79 +23,68 @@ expose("utilities/getPercentChangeSpan.R")
 
 consts <- use("constants.R")
 
+
 ui <- function(id) {
   ns <- NS(id)
-
+  
+  # select only those metrics that are available per country
+  choices <- c("Sentiment by Title","Sentiment by Description")
+  
   tagList(
-    div(
-      class = "panel-header breakdown-header",
-      div(class = "item", "Breakdown"),
+    tags$div(
+      class = "panel-header",
+      selectInput(
+        ns("metricclouds_positivenegative"), "Select metric for the map",
+        choices,
+        width = NULL,
+        selectize = TRUE
+      )
     ),
-    div(
-      class = "chart-breakdown-container",
-      plotOutput(ns("breakdown"), width = "100%", height = "200px")
-    )
+    
+    br(),
+    br(),
+      plotOutput(ns("wordclouds_pos_neg"))
+    
   )
 }
 
-init_server <- function(id, df, y, m, previous_time_range) {
-  callModule(server, id, df, y, m, previous_time_range)
+init_server <- function(id) {
+  callModule(server, id)
 }
 
-server <- function(input, output, session, df, y, m, previous_time_range) {
+server <- function(input, output, session) {
   
-  output$breakdown <- renderPlot({
-    yearly_stats <- read.csv("data/yearly_stats.csv")
-    monthly_stats <- read.csv("data/monthly_stats.csv")
-    metrics <- names(consts$metrics_list)
-    percents <- paste(metrics, ".perc_", previous_time_range(), sep="")
-
-    if (m() == "0") {
-      data <- yearly_stats %>%
-        filter(year(as.Date(date)) == y())
-    } else {
-      data <- monthly_stats %>%
-        filter(year(as.Date(date)) == y() & month(as.Date(date)) == m())
+  
+  dfsent <- reactive({
+    
+    if(str_detect(input$metricclouds_positivenegative,"Description")==TRUE){
+      read.csv("data/sentiment_description.csv") %>% select(X,sentiment,n)
+      
+    }else{
+      
+      read.csv("data/sentiment_title.csv") %>% select(X,sentiment,n)
     }
-
-    data <- data %>%
-      select(all_of(percents)) %>%
-      gather(all_of(percents), key = "metric", value = "value") %>%
-      mutate(
-        label = paste(round(value, 1), "%", sep=""),
-        barColor = ifelse(value >= 0 | is.na(value), "#0099F9", "#15354A"),
-        hOffset = ifelse(value >= 0 | is.na(value), -0.1, 1.1),
-      )
-
-    # set metric names as titles
-    data["metric"] <- unlist(lapply(consts$metrics_list[metrics], "[", "title"))
-
-    bar <- ggplot(data, aes(metric, value, weight = value))
-    bar +
-      coord_flip() +
-      geom_bar(
-        fill = data$barColor,
-        show.legend = FALSE,
-        width = 0.65,
-        stat="identity"
-      ) +
-      geom_text(
-        aes(y = value, label = label),
-        vjust = 0.5,
-        hjust = data$hOffset,
-        color = data$barColor
-      ) +
-      scale_y_continuous(expand = c(0.15, 0.1)) +
-      labs(x = NULL, y = NULL) +
-      theme_classic(
-        base_size = 14
-      ) +
-      theme(
-        text = element_text(size = 14),
-        axis.text.y = element_text(color = "#6E757B"),
-        axis.text.x = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()
-      )
+   
+     
+    
   })
+  
+  
+  
+  output$wordclouds_pos_neg <- renderPlot({
+    dfsent() %>%
+      group_by(sentiment) %>%
+      slice_max(n, n = 10) %>% 
+      ungroup() %>%
+     # mutate(word = reorder(word, n)) %>%
+      ggplot(aes(n, word, fill = sentiment)) +
+      geom_col(show.legend = FALSE) +
+      facet_wrap(~sentiment, scales = "free_y") +
+      labs(x = "Contribution to sentiment",
+           y = NULL) 
+  })
+  
+  
+  
+  
 }

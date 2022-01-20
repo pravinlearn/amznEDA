@@ -1,4 +1,5 @@
 # Echarts4r map module
+
 import("shiny")
 import("echarts4r")
 import("htmlwidgets")
@@ -11,7 +12,7 @@ import("stringr")
 import("utils")
 export("ui")
 export("init_server")
-import("wordcloud")
+import("htmltools")
 expose("utilities/getMetricsChoices.R")
 expose("utilities/getTimeFilterChoices.R")
 expose("utilities/getDataByTimeRange.R")
@@ -23,19 +24,20 @@ ui <- function(id) {
   ns <- NS(id)
   
   # select only those metrics that are available per country
-  choices <- c("Wordcloud by title","Wordcloud by Description")
+  choices <- c("Data table")
   
   tagList(
     tags$div(
       class = "panel-header",
       selectInput(
-        ns("metricclouds"), "Select metric for the map",
+        ns("metric"), "Select metric for the map",
         choices,
         width = NULL,
         selectize = TRUE
       )
     ),
-    echarts4rOutput(ns("wordclouds")),
+    # wordcl(ns("wordclouds")),
+    DTOutput(ns("dttbles"))
   )
 }
 
@@ -46,34 +48,15 @@ init_server <- function(id, amzndf) {
 server <- function(input, output, session, amzndf) {
   
   
-  df <- reactive({
-    
-    if(str_detect(input$metricclouds,"title") == TRUE){
-        read.csv("data/title_words.csv") %>%
-        select(word,freq) %>%
-        filter(freq > 100)
-    }
-    else{
-      read.csv("data/descriptionwords.csv") %>%
-        select(word,freq) %>%
-        filter(freq > 30)
-    }
-    
+  output$dttbles <- renderDT({
+    datatable(
+      amzndf  %>%
+        select(7,3,10,11) %>%
+        head(8),
+      options = list(pageLength = 20), rownames = FALSE
+      
+    )
   })
-  
-  
-  
-  output$wordclouds <- renderEcharts4r({
-    
-    df() |>
-      e_color_range(freq, color) |>
-      e_charts() |>
-      e_cloud(word, freq, color, shape = "star")
-  })
-  
-  
-  
-
 }
 
 
