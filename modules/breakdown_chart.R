@@ -2,6 +2,7 @@
 
 # Echarts4r map module
 import("shiny")
+#import("plotly")
 import("echarts4r")
 import("ggplot2")
 import("htmlwidgets")
@@ -28,13 +29,13 @@ ui <- function(id) {
   ns <- NS(id)
   
   # select only those metrics that are available per country
-  choices <- c("Sentiment by Title","Sentiment by Description")
+  choices <- c("Positive words by Title","Positive words by Description","Negative words by Title","Negative words by Description")
   
   tagList(
     tags$div(
       class = "panel-header",
       selectInput(
-        ns("metricclouds_positivenegative"), "Select metric for the map",
+        ns("metricclouds_positivenegative"), "Select Metric for Sentiments",
         choices,
         width = NULL,
         selectize = TRUE
@@ -43,7 +44,7 @@ ui <- function(id) {
     
     br(),
     br(),
-      plotOutput(ns("wordclouds_pos_neg"))
+      echarts4rOutput(ns("wordclouds_pos_neg"))
     
   )
 }
@@ -58,30 +59,40 @@ server <- function(input, output, session) {
   dfsent <- reactive({
     
     if(str_detect(input$metricclouds_positivenegative,"Description")==TRUE){
-      read.csv("data/sentiment_description.csv") %>% select(X,sentiment,n)
+      read.csv("data/sentiment_description.csv",header = T) %>% select(word,sentiment,n)
       
     }else{
       
-      read.csv("data/sentiment_title.csv") %>% select(X,sentiment,n)
+      read.csv("data/sentiment_title.csv",header = T) %>% select(word,sentiment,n)
     }
    
      
     
   })
   
+  dfsent_positive_negative <- reactive({
+    
+    if(str_detect(input$metricclouds_positivenegative,"Positive")==TRUE){
+      dfsent() %>%
+        filter(sentiment == "positive")
+    }else{
+      dfsent() %>%
+        filter(sentiment == "negative")
+    }
+    
+    
+    
+  })
   
   
-  output$wordclouds_pos_neg <- renderPlot({
-    dfsent() %>%
-      group_by(sentiment) %>%
-      slice_max(n, n = 10) %>% 
-      ungroup() %>%
-     # mutate(word = reorder(word, n)) %>%
-      ggplot(aes(n, word, fill = sentiment)) +
-      geom_col(show.legend = FALSE) +
-      facet_wrap(~sentiment, scales = "free_y") +
-      labs(x = "Contribution to sentiment",
-           y = NULL) 
+  output$wordclouds_pos_neg <- renderEcharts4r({
+    dfsent_positive_negative() |>
+      arrange(desc(n))|>
+      head(10) |>
+      e_charts() |> 
+      e_funnel(n, word) |>
+      e_tooltip()
+    
   })
   
   

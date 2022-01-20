@@ -93,11 +93,7 @@ map_metrics <- c(
 
 prev_time_range_choices <- list("Previous Year" = "prev_year", "Previous Month" = "prev_month")
 
-appsilonLogo <- HTML("
-  <svg class='logo-svg' viewBox='0 0 660.52 262.96'>
-    <use href='assets/icons/icons-sprite-map.svg#appsilon-logo'></use>
-  </svg>
-")
+appsilonLogo <- img(src = "assets/icons/amznprime.png",width = "100%")
 
 shinyLogo <- HTML("
   <svg class='logo-svg' viewBox='0 0 100 68'>
