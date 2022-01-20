@@ -1,5 +1,6 @@
 library(dplyr) # for data wrangling
 library(tidytext)
+library(mailR)
 library(reactable)# for NLP
 library(plotly)
 library(stringr) # to deal with strings

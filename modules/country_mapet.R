@@ -1,5 +1,5 @@
 # Echarts4r map module
-
+import("mailR")
 import("shiny")
 import("echarts4r")
 import("htmlwidgets")
@@ -24,20 +24,19 @@ ui <- function(id) {
   ns <- NS(id)
   
   # select only those metrics that are available per country
-  choices <- c("Data table")
+  choices <- c("Email")
   
   tagList(
     tags$div(
       class = "panel-header",
       selectInput(
-        ns("metric"), "Select metric for the map",
+        ns("email"), "Select metric for the map",
         choices,
         width = NULL,
         selectize = TRUE
       )
-    ),
-    # wordcl(ns("wordclouds")),
-    DTOutput(ns("dttbles"))
+    )
+
   )
 }
 
@@ -48,15 +47,7 @@ init_server <- function(id, amzndf) {
 server <- function(input, output, session, amzndf) {
   
   
-  output$dttbles <- renderDT({
-    datatable(
-      amzndf  %>%
-        select(7,3,10,11) %>%
-        head(8),
-      options = list(pageLength = 20), rownames = FALSE
-      
-    )
-  })
-}
+
+  }
 
 
