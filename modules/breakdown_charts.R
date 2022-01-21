@@ -51,12 +51,12 @@ server <- function(input, output, session, amzndf) {
     if(str_detect(input$metricclouds,"title") == TRUE){
         read.csv("data/title_words.csv") %>%
         select(word,freq) %>%
-        filter(freq > 100)
+        filter(freq > 30)
     }
     else{
       read.csv("data/descriptionwords.csv") %>%
         select(word,freq) %>%
-        filter(freq > 30)
+        filter(freq > 100)
     }
     
   })
@@ -68,7 +68,9 @@ server <- function(input, output, session, amzndf) {
     df() |>
       e_color_range(freq, color) |>
       e_charts() |>
-      e_cloud(word, freq, color, shape = "star")
+      e_cloud(word, freq, color, shape = "star") |> 
+      e_tooltip()|>
+      e_theme("forest") 
   })
   
   

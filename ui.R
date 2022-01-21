@@ -13,22 +13,10 @@ htmlTemplate(
   appVersion = consts$app_version,
   mainLogo = getExternalLink("https://appsilon.com/", "main", consts$appsilonLogo),
   dashboardLogo = getExternalLink("https://shiny.rstudio.com/", "dashboard", consts$shinyLogo),
-  selectYear = selectInput(
-    "selected_year", "Year",
-    choices = unique("2021"),
-    selectize = TRUE
-  ),
-  selectMonth = selectInput(
-    "selected_country", "Country",
-    choices = unique("January"),
-    selectize = TRUE
-  ),
-  previousTimeRange = selectInput(
-    "previous_time_range", "Compare to",
-    choices = consts$prev_time_range_choices,
-    selected = "prev_year",
-    selectize = TRUE
-  ),
+  selectYear = downloadButton("downloadData", "Export"),
+  selectMonth = actionButton("prev-report","Preview"),
+  previousTimeRange =  actionButton("reportgen","Report",icon = icon("file-download")),
+
   salesSummary = metric_summary$ui("sales"),
   productionSummary = metric_summary$ui("production"),
   usersSummary =metric_summary$ui("users"),
