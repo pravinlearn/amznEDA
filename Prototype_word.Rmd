@@ -1,0 +1,308 @@
+---
+title: "Amaznon Prime EDA Report"
+fontsize: 10pt
+output:
+  word_document:
+    reference_docx: new_sample_test.docx
+    fig_caption: yes
+  pdf_document: default
+  html_document:
+    df_print: paged
+geometry: margin= 2cm
+params:
+  table: some object
+always_allow_html: yes
+tables: yes
+---
+
+```{r, setup, warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+knitr::opts_chunk$set(echo = params$printcode)
+knitr::opts_chunk$set(fig.height=12)
+knitr::opts_chunk$set(fig.width=20)
+knitr::opts_chunk$set(fig.align='center')
+
+
+```
+
+
+
+```{r, warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+library(dplyr) # for data wrangling
+library(tidytext)
+library(mailR)
+library(reactable)# for NLP
+library(flextable)
+library(plotly)
+library(stringr) # to deal with strings
+library(wordcloud) # to render wordclouds
+library(knitr) # for tables
+library(DT) # for dynamic tables
+library(tidyr)
+library(wordcloud2)
+library(readr)
+library(tinytex)
+library(huxtable)
+library(tm)
+library(ggplot2)
+library(shinyhelper)
+library(echarts4r)
+library(textdata)
+library(janeaustenr)
+library(dplyr)
+library(stringr)
+library(reshape2)
+library(shiny)
+library(modules)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(dygraphs)
+library(sass)
+library(glue)
+library(ggplot2)
+library(RColorBrewer)
+library(xts)
+library(echarts4r)
+library(htmltools)
+library(reshape2)
+
+
+amazon_prime_titles <- read_csv("data/amazon.csv")
+
+amazon_prime_titles  -> amzn
+
+amzn %>% mutate(director =ifelse(is.na(director) == TRUE,"DirJam",director),
+                cast =ifelse(is.na(cast) == TRUE,"Tom,Jery",cast),
+                country =ifelse(is.na(country) == TRUE,"UKS",country)
+) %>% select(-rating,-date_added) -> amzn
+
+amzn[sapply(amzn, is.character)] <- lapply(amzn[sapply(amzn, is.character)], 
+                                           as.factor)
+amzn %>% arrange(desc(release_year)) -> amzn
+
+```
+
+# Sentiments By Title
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+
+# read.csv("data/sentiment_description.csv",header = T) %>%
+#   select(word,sentiment,n) %>% 
+#   filter(sentiment == "positive") -> dfsentdescription
+      read.csv("data/sentiment_title.csv",header = T) %>% 
+        select(word,sentiment,n)-> dfsenttitle
+
+
+
+dfsenttitle %>%
+  group_by(sentiment) %>%
+  slice_max(n, n = 15) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  labs(x = "Contribution to sentiment",
+       y = NULL)+
+  theme(text = element_text(size=30))
+
+```
+
+
+
+\newpage
+
+
+
+
+# Sentiment By Description
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+
+read.csv("data/sentiment_description.csv",header = T)  %>% 
+        select(word,sentiment,n)-> dfsentdescription
+
+dfsentdescription %>%
+  group_by(sentiment) %>%
+  slice_max(n, n = 15) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  labs(x = "Contribution to sentiment",
+       y = NULL)+
+  theme(text = element_text(size=30))
+
+```
+
+
+
+\newpage
+
+
+
+# Top 5 Countries With Highest Content
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+amzn %>% 
+      filter(country != "UKS") %>%
+      select(country) %>% 
+      group_by(country) %>% 
+      summarise(Count = n()) %>%
+      arrange(desc(Count)) %>% head(5) -> dfq
+
+# Compute percentages
+dfq$fraction <- dfq$Count / sum(dfq$Count)
+
+# Compute the cumulative percentages (top of each rectangle)
+dfq$ymax <- cumsum(dfq$fraction)
+
+# Compute the bottom of each rectangle
+dfq$ymin <- c(0, head(dfq$ymax, n=-1))
+
+# Compute label position
+dfq$labelPosition <- (dfq$ymax + dfq$ymin) / 2
+
+# Compute a good label
+dfq$label <- paste0(dfq$country, "\n value: ", dfq$Count)
+
+
+ggplot(dfq, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=country)) +
+    geom_rect() +
+    geom_text( x=2, aes(y=labelPosition, label=label, color=country), size=6) + # x here controls label position (inner / outer)
+    scale_fill_brewer(palette=3) +
+    scale_color_brewer(palette=3) +
+    coord_polar(theta="y") +
+    xlim(c(-1, 4)) +
+    theme_void() +
+    theme(legend.position = "none")
+```
+
+\newpage
+
+
+
+# Least 5 Countries With Highest Content
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+amzn %>% 
+      filter(country != "UKS") %>%
+      select(country) %>% 
+      group_by(country) %>% 
+      summarise(Count = n()) %>%
+      arrange(desc(Count)) %>% tail(5) -> dfq1
+
+# Compute percentages
+dfq1$fraction <- dfq1$Count / sum(dfq1$Count)
+
+# Compute the cumulative percentages (top of each rectangle)
+dfq1$ymax <- cumsum(dfq1$fraction)
+
+# Compute the bottom of each rectangle
+dfq1$ymin <- c(0, head(dfq1$ymax, n=-1))
+
+# Compute label position
+dfq1$labelPosition <- (dfq1$ymax + dfq1$ymin) / 2
+
+# Compute a good label
+dfq1$label <- paste0(dfq1$country, "\n value: ", dfq1$Count)
+
+
+ggplot(dfq1, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=country)) +
+    geom_rect() +
+    geom_text( x=2, aes(y=labelPosition, label=label, color=country), size=6) + # x here controls label position (inner / outer)
+    scale_fill_brewer(palette=1) +
+    scale_color_brewer(palette=1) +
+    coord_polar(theta="y") +
+    xlim(c(-1, 4)) +
+    theme_void() +
+    theme(legend.position = "none")
+```
+
+\newpage
+
+# Store Performance Distribution
+<div custom-style=Content>This plot shows the average store rating of all the stores.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+
+# table_list$store_rating %>%
+#       group_by(store_id) %>%
+#       summarise(avg = store_rating %>% mean()) %>%
+#       mutate(avg = ifelse(store_id == 1, (avg + 2), avg)) %>%
+#       mutate(avg = ifelse(store_id == 3, (avg + 1.5), avg)) %>%
+#       mutate(avg = ifelse(store_id == 5, (avg + 1), avg)) %>%
+#       mutate(avg = ifelse(store_id == 8, (avg + 2), avg)) %>%
+#       mutate(store_id = paste0("Store_", store_id)) %>%
+#       ggplot(aes(x = store_id %>% factor() %>% fct_reorder(avg),
+#                  y = avg,
+#                  fill = avg)) +
+#       geom_col() +
+#       geom_text(aes(label = avg %>% round(1)), nudge_y = 0.5,size=8) +
+#       scale_y_continuous(breaks = seq(0,5,0.5)) +
+#       coord_flip() +
+#       scale_fill_gradient(low = "orange", high = "blue") +
+#       theme_minimal() +
+#       labs(y = "Average Rating",
+#            x = "",
+#            fill = "Rating") +
+#       theme(
+#         axis.text.x = element_text(size=24,angle = 0),
+#         axis.text.y = element_text(size=24),
+#         axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
+#         axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
+#         plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
+#         legend.text=element_text(size=24),
+#         legend.title=element_text(size=24,face="bold")
+# 
+#       )
+```
+
+
+
+
+\newpage
+
+# Agent Performance
+<div custom-style=Content>This plot shows the average rating of all the agents working in stores.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+
+ amzn %>% head() %>% select(1,2,4)
+
+```
+
+
+
+
+\newpage
+# Distribution of Sales on the basis of Store
+<div custom-style=Content>This plot shows the Distribution of Sales on the basis of Store.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,fig.height=20,message=FALSE}
+
+# table_list$gross_income %>% 
+#   group_by(store_id) %>% 
+#   mutate(store_id = factor(store_id)) %>%
+#   mutate(Sales = sales %>% rollmean(k = 7, fill = NA)) %>% 
+#   ggplot(aes(x = date,
+#              y = Sales,
+#              color = store_id)) +
+#   geom_line() +
+#    facet_wrap(~store_id, ncol = 1, scales = "free_y")+ 
+#     theme_minimal()+
+#   labs(x="Date")+
+#   theme(
+#     axis.text.x = element_text(size=24,angle = 0),
+#     axis.text.y = element_text(size=24),
+#     axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
+#     axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
+#     plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
+#     legend.text=element_text(size=24),
+#     legend.title=element_text(size=24,face="bold"),
+#     strip.text = element_text(size = 24,colour = "white"),
+#     
+#     strip.background = element_rect(
+#       color="#ffffff", fill="#000000", size=1.5, linetype="solid"
+#     )
+#   )
+
+```

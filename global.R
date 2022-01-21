@@ -10,6 +10,8 @@ library(DT) # for dynamic tables
 library(tidyr)
 library(wordcloud2)
 library(readr)
+library(tinytex)
+library(huxtable)
 library(tm)
 library(ggplot2)
 library(shinyhelper)

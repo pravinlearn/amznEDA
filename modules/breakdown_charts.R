@@ -70,7 +70,7 @@ server <- function(input, output, session, amzndf) {
       e_charts() |>
       e_cloud(word, freq, color, shape = "star") |> 
       e_tooltip()|>
-      e_theme("forest") 
+      e_theme("forest")
   })
   
   

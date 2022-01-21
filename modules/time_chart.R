@@ -88,7 +88,7 @@ server <- function(input, output, session, amzndfs) {
   
   
   output$plotdonut <- renderEcharts4r({
-    content_logic_countries() %>% e_theme("inspired")
+    content_logic_countries() %>% e_theme("inspired") %>% e_toolbox_feature()
   })
   
   

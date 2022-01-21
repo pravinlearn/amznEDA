@@ -92,7 +92,9 @@ server <- function(input, output, session) {
       e_charts() |> 
       e_funnel(n, word) |>
       e_tooltip() |>
-      e_theme("inspired")
+      e_theme("inspired") %>% 
+      e_legend(show = FALSE) %>%
+      e_toolbox_feature()
     
   })
   
