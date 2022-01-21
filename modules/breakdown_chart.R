@@ -44,7 +44,7 @@ ui <- function(id) {
     
     br(),
     br(),
-      echarts4rOutput(ns("wordclouds_pos_neg"))
+    echarts4rOutput(ns("wordclouds_pos_neg"))
     
   )
 }
@@ -65,8 +65,8 @@ server <- function(input, output, session) {
       
       read.csv("data/sentiment_title.csv",header = T) %>% select(word,sentiment,n)
     }
-   
-     
+    
+    
     
   })
   
@@ -91,7 +91,8 @@ server <- function(input, output, session) {
       head(10) |>
       e_charts() |> 
       e_funnel(n, word) |>
-      e_tooltip()
+      e_tooltip() |>
+      e_theme("inspired")
     
   })
   

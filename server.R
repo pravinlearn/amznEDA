@@ -35,4 +35,20 @@ server <- function(input, output, session) {
                                amzndf = amzn)
   map_chart$init_server("map_chart",
                         amzndf = amzn)
+  
+  
+  
+  
+  
+  
+  
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(Sys.time(), 'AmznPrime.csv', sep='')
+    },
+    content = function(file) {
+      write.csv(amzn, file, row.names = FALSE)
+    }
+  )
+
 }
