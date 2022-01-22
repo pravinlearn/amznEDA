@@ -29,13 +29,13 @@ ui <- function(id) {
   ns <- NS(id)
   
   # select only those metrics that are available per country
-  choices <- c("Positive words by Title","Positive words by Description","Negative words by Title","Negative words by Description")
+  choices <- c("DataTable View","Movie by Genre","TvShow by Genre")
   
   tagList(
     tags$div(
       class = "panel-header",
       selectInput(
-        ns("metricclouds_positivenegative"), "Select Metric for Sentiments",
+        ns("metricgenrecount"), "Select Metric for Genres",
         choices,
         width = NULL,
         selectize = TRUE
@@ -44,7 +44,9 @@ ui <- function(id) {
     
     br(),
     br(),
-    echarts4rOutput(ns("wordclouds_pos_neg"))
+
+    #echarts4rOutput(ns("wordclouds_pos_neg"))
+    uiOutput(ns("mor_funct")),
     
   )
 }
@@ -56,49 +58,73 @@ init_server <- function(id) {
 server <- function(input, output, session) {
   
   
-  dfsent <- reactive({
+  output$mor_funct <- renderUI({
     
-    if(str_detect(input$metricclouds_positivenegative,"Description")==TRUE){
-      read.csv("data/sentiment_description.csv",header = T) %>% select(word,sentiment,n)
+    if(str_detect(input$metricgenrecount,"DataTable")==TRUE){
+      DTOutput(session$ns("gener"))
+      
+    }else if(str_detect(input$metricgenrecount,"Movie")==TRUE){
+      echarts4rOutput(session$ns("gener_viz_movie"))
       
     }else{
+      echarts4rOutput(session$ns("gener_viz_TV"))
       
-      read.csv("data/sentiment_title.csv",header = T) %>% select(word,sentiment,n)
     }
     
     
     
   })
-  
-  dfsent_positive_negative <- reactive({
-    
-    if(str_detect(input$metricclouds_positivenegative,"Positive")==TRUE){
-      dfsent() %>%
-        filter(sentiment == "positive")
-    }else{
-      dfsent() %>%
-        filter(sentiment == "negative")
-    }
-    
-    
-    
-  })
+ 
   
   
-  output$wordclouds_pos_neg <- renderEcharts4r({
-    dfsent_positive_negative() |>
-      arrange(desc(n))|>
-      head(10) |>
-      e_charts() |> 
-      e_funnel(n, word) |>
-      e_tooltip() |>
-      e_theme("inspired") %>% 
-      e_legend(show = FALSE) %>%
-      e_toolbox_feature()
+  rv <- reactiveValues(
+    data = read.csv("data/GeneresCount.csv",header = T) %>%
+      select(type,listed_in,Count),
+    # Clear the previous deletions
+    deletedRows = NULL,
+    deletedRowIndices = list()
+  )
+  
+ 
+ 
+ 
+
+  output$gener <- renderDT({
+    # genreount() |> 
+    #   head() |> 
+    #   e_charts(listed_in) |> 
+    #   e_pie(Count, roseType = "radius") |> e_theme("inspired") |> e_toolbox_feature() |> e_tooltip()
+    
+    rv$data
     
   })
   
   
+  output$gener_viz_movie <- renderEcharts4r({
+    rv$data |>
+      filter(type == "Movie") |>
+      head() |>
+      e_charts(listed_in) |>
+      e_pie(Count, roseType = "radius") |> e_theme("inspired") |> e_toolbox_feature() |> e_tooltip() |> e_legend(show = FALSE)
+    
+
+  })
   
   
-}
+  output$gener_viz_TV <- renderEcharts4r({
+    rv$data |>
+      filter(type == "TV Show") |>
+      
+      head() |>
+      e_charts(listed_in) |>
+      e_pie(Count, roseType = "radius") |> e_theme("inspired") |> e_toolbox_feature() |> e_tooltip() |> e_legend(show = FALSE)
+    
+    
+  })
+  
+  }
+
+
+  
+  
+  

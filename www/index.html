@@ -7,7 +7,7 @@
         .chart-breakdown {
     grid-column: 5 / 3 !important;
 }
-     .chart-mapet{
+     .chart-breakdownstwo{
            grid-column: 5 / 3 !important;
 
        
@@ -43,7 +43,7 @@
           <span class="dashboard-version">{{ appVersion }}</span>
         </h2>
         <div class="dashboard-filters">
-          {{ selectYear }} {{ selectMonth }} {{ previousTimeRange }}
+          {{ selectYear }} {{ selectMonth }} {{ previousTimeRange }} {{sendMail}}
         </div>
       </header>
       <section class="dashboard-panels">
@@ -55,10 +55,7 @@
         <div class="panel panel-chart chart-map">{{ countryMap }}</div>
         <div class="panel panel-chart chart-breakdown">{{ breakdownChart }}</div>
         <div class="panel panel-chart chart-breakdowns">{{ breakdownCharts }}</div>
-        <div class="panel panel-chart chart-mapet">{{ countryMapet }}</div>
-
-
-
+        <div class="panel panel-chart chart-breakdownstwo">{{ breakdownChartstwo }}</div>
       </section>
     </main>
     <footer class="footer">

@@ -55,7 +55,7 @@ map_chart <- use("./modules/map_chart.R")
 time_chart <- use("./modules/time_chart.R")
 breakdown_chart <- use("./modules/breakdown_chart.R")
 breakdown_charts <- use("./modules/breakdown_charts.R")
-country_mapet <- use("./modules/country_mapet.R")
+breakdown_chartstwo <- use("./modules/breakdown_chartstwo.R")
 
 amazon_prime_titles <- read_csv("data/amazon.csv")
 
