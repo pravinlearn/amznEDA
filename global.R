@@ -1,6 +1,7 @@
 library(dplyr) # for data wrangling
 library(tidytext)
 library(mailR)
+library(mailR)
 library(reactable)# for NLP
 library(plotly)
 library(stringr) # to deal with strings
@@ -69,3 +70,15 @@ amzn %>% mutate(director =ifelse(is.na(director) == TRUE,"DirJam",director),
 amzn[sapply(amzn, is.character)] <- lapply(amzn[sapply(amzn, is.character)], 
                                            as.factor)
 amzn %>% arrange(desc(release_year)) -> amzn
+
+
+
+generesCountfile <-  read.csv("data/GeneresCount.csv",header = T)
+
+
+
+sentititle <-   read.csv("data/sentiment_title.csv",header = T)
+ 
+
+
+descripSentiment <-  read.csv("data/sentiment_description.csv",header = T)

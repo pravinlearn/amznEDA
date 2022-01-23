@@ -59,6 +59,8 @@ library(lubridate)
 library(dygraphs)
 library(sass)
 library(glue)
+library("webshot")
+#webshot::install_phantomjs()
 library(ggplot2)
 library(RColorBrewer)
 library(xts)
@@ -186,14 +188,17 @@ ggplot(dfq, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=country)) +
 # Least 5 Countries With Highest Content
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
 ```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
-amzn %>% 
+amzn %>%
       filter(country != "UKS") %>%
-      select(country) %>% 
-      group_by(country) %>% 
+      select(country) %>%
+      group_by(country) %>%
       summarise(Count = n()) %>%
       arrange(desc(Count)) %>% tail(5) -> dfq1
 
-# Compute percentages
+
+
+
+#Compute percentages
 dfq1$fraction <- dfq1$Count / sum(dfq1$Count)
 
 # Compute the cumulative percentages (top of each rectangle)
@@ -222,11 +227,17 @@ ggplot(dfq1, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=country)) +
 
 \newpage
 
-# Store Performance Distribution
-<div custom-style=Content>This plot shows the average store rating of all the stores.</div>
+# 5 Frequency of Generes
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
 ```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
 
 # table_list$store_rating %>%
+
+read.csv("data/GeneresCount.csv",header = T) %>%
+      select(type,listed_in,Count) %>% head(20) %>%
+  rename("Type" = "type",
+         "Genere"="listed_in",
+         "Frequency" ="Count") %>% huxtable()
 #       group_by(store_id) %>%
 #       summarise(avg = store_rating %>% mean()) %>%
 #       mutate(avg = ifelse(store_id == 1, (avg + 2), avg)) %>%
@@ -263,46 +274,158 @@ ggplot(dfq1, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=country)) +
 
 \newpage
 
-# Agent Performance
-<div custom-style=Content>This plot shows the average rating of all the agents working in stores.</div>
+# Wordcloud by Description
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
 ```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
 
- amzn %>% head() %>% select(1,2,4)
+read.csv("data/descriptionwords.csv") %>%
+        select(word,freq) %>%
+        filter(freq > 100) -> df_description_frq
+
+  wordcloud(df_description_frq$word, n= df_description_frq$freq)
+
+```
+
+\newpage
+
+
+# Wordcloud by Title
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,message=FALSE}
+
+read.csv("data/title_words.csv") %>%
+        select(word,freq) %>%
+        filter(freq > 30) -> df_title_frq
+
+  wordcloud(df_title_frq$word, n= df_title_frq$freq)
 
 ```
 
 
+\newpage
+# Positive Words Freq by Description
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,fig.height=20,message=FALSE}
+
+
+  read.csv("data/sentiment_description.csv",header = T) %>% 
+  select(word,sentiment,n) %>%
+  filter(sentiment == "positive") %>% arrange(desc(n)) %>% head(5) -> positive_sentim_freq
+
+positive_sentim_freq %>%
+  ggplot(aes(x=word,y=n,fill = word)) + geom_col() + 
+    facet_wrap(~ word) +
+theme(
+    axis.text.x = element_text(size=24,angle = 0),
+    axis.text.y = element_text(size=24),
+    axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
+    axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
+    plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
+    legend.text=element_text(size=24),
+    legend.title=element_text(size=24,face="bold"),
+    strip.text = element_text(size = 24,colour = "white"),
+
+    strip.background = element_rect(
+      color="#ffffff", fill="#000000", size=1.5, linetype="solid"
+    )
+  )
+
+
+
+```
+\newpage
+
+# Negative Words Freq by Description
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,fig.height=20,message=FALSE}
+
+
+  
+read.csv("data/sentiment_description.csv",header = T) %>% 
+  select(word,sentiment,n) %>%
+  filter(sentiment == "negative") %>% arrange(desc(n)) %>% head(5) -> negative_sentim_freq
+
+negative_sentim_freq %>% ggplot(aes(x=word,y=n,fill = word)) + geom_col() + 
+    facet_wrap(~word,ncol = 2) +
+theme(
+    axis.text.x = element_text(size=24,angle = 0),
+    axis.text.y = element_text(size=24),
+    axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
+    axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
+    plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
+    legend.text=element_text(size=24),
+    legend.title=element_text(size=24,face="bold"),
+    strip.text = element_text(size = 24,colour = "white"),
+
+    strip.background = element_rect(
+      color="#ffffff", fill="#000000", size=1.5, linetype="solid"
+    )
+  )
+
+
+```
 
 
 \newpage
-# Distribution of Sales on the basis of Store
-<div custom-style=Content>This plot shows the Distribution of Sales on the basis of Store.</div>
+
+# Positive Words Freq by Title
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
 ```{r warning=FALSE, echo=FALSE,error=FALSE,fig.height=20,message=FALSE}
 
-# table_list$gross_income %>% 
-#   group_by(store_id) %>% 
-#   mutate(store_id = factor(store_id)) %>%
-#   mutate(Sales = sales %>% rollmean(k = 7, fill = NA)) %>% 
-#   ggplot(aes(x = date,
-#              y = Sales,
-#              color = store_id)) +
-#   geom_line() +
-#    facet_wrap(~store_id, ncol = 1, scales = "free_y")+ 
-#     theme_minimal()+
-#   labs(x="Date")+
-#   theme(
-#     axis.text.x = element_text(size=24,angle = 0),
-#     axis.text.y = element_text(size=24),
-#     axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
-#     axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
-#     plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
-#     legend.text=element_text(size=24),
-#     legend.title=element_text(size=24,face="bold"),
-#     strip.text = element_text(size = 24,colour = "white"),
-#     
-#     strip.background = element_rect(
-#       color="#ffffff", fill="#000000", size=1.5, linetype="solid"
-#     )
-#   )
+
+  read.csv("data/sentiment_title.csv",header = T) %>% 
+  select(word,sentiment,n) %>%
+  filter(sentiment == "positive") %>% arrange(desc(n)) %>% head(5) -> positive_sentim_freq
+
+positive_sentim_freq %>%
+  ggplot(aes(x=word,y=n,fill = word)) + geom_col() + 
+    facet_wrap(~ word) +
+theme(
+    axis.text.x = element_text(size=24,angle = 0),
+    axis.text.y = element_text(size=24),
+    axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
+    axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
+    plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
+    legend.text=element_text(size=24),
+    legend.title=element_text(size=24,face="bold"),
+    strip.text = element_text(size = 24,colour = "white"),
+
+    strip.background = element_rect(
+      color="#ffffff", fill="#000000", size=1.5, linetype="solid"
+    )
+  )
+
+
+
+```
+\newpage
+
+# Negative Words Freq by Title
+<div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+```{r warning=FALSE, echo=FALSE,error=FALSE,fig.height=20,message=FALSE}
+
+
+  
+read.csv("data/sentiment_title.csv",header = T) %>% 
+  select(word,sentiment,n) %>%
+  filter(sentiment == "negative") %>% arrange(desc(n)) %>% head(5) -> negative_sentim_freq
+
+negative_sentim_freq %>% ggplot(aes(x=word,y=n,fill = word)) + geom_col() + 
+    facet_wrap(~word,ncol = 2) +
+theme(
+    axis.text.x = element_text(size=24,angle = 0),
+    axis.text.y = element_text(size=24),
+    axis.title.x = element_text(size=24,face="bold",hjust = 0.5),
+    axis.title.y = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.2),
+    plot.title = element_text(size=24,face="bold",hjust = 0.5,vjust = 0.9),
+    legend.text=element_text(size=24),
+    legend.title=element_text(size=24,face="bold"),
+    strip.text = element_text(size = 24,colour = "white"),
+
+    strip.background = element_rect(
+      color="#ffffff", fill="#000000", size=1.5, linetype="solid"
+    )
+  )
+
 
 ```

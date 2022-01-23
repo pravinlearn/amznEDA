@@ -51,11 +51,11 @@ ui <- function(id) {
   )
 }
 
-init_server <- function(id) {
-  callModule(server, id)
+init_server <- function(id,amzndf) {
+  callModule(server, id,amzndf)
 }
 
-server <- function(input, output, session) {
+server <- function(input, output, session,amzndf) {
   
   
   output$mor_funct <- renderUI({
@@ -78,7 +78,7 @@ server <- function(input, output, session) {
   
   
   rv <- reactiveValues(
-    data = read.csv("data/GeneresCount.csv",header = T) %>%
+    data = amzndf %>%
       select(type,listed_in,Count),
     # Clear the previous deletions
     deletedRows = NULL,

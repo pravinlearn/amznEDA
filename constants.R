@@ -2,8 +2,8 @@
 import("dplyr")
 import("htmltools")
 
-app_title <- "OTT Dashboard"
-app_version <- "1.0.0"
+app_title <- "AMZN Prime Analytics"
+app_version <- NULL
 data_last_day <- "2020-05-10" %>% as.Date()
 data_first_day <- "2015-01-01" %>% as.Date()
 marketplace_website <- "https://appsilon.com/"
@@ -95,11 +95,7 @@ prev_time_range_choices <- list("Previous Year" = "prev_year", "Previous Month" 
 
 appsilonLogo <- img(src = "assets/icons/amznprime.png",width = "100%")
 
-shinyLogo <- HTML("
-  <svg class='logo-svg' viewBox='0 0 100 68'>
-    <use href='assets/icons/icons-sprite-map.svg#shiny-logo'></use>
-  </svg>
-")
+shinyLogo <-img(src = "assets/icons/amznprime.png",width = "100%")
 
 colors <- list(
   white = "#FFF",

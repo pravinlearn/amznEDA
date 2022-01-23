@@ -50,21 +50,21 @@ ui <- function(id) {
   )
 }
 
-init_server <- function(id) {
-  callModule(server, id)
+init_server <- function(id,amzndf1,amzndf2) {
+  callModule(server, id,amzndf1,amzndf2)
 }
 
-server <- function(input, output, session) {
+server <- function(input, output, session,amzndf1,amzndf2) {
   
   
   dfsent <- reactive({
     
     if(str_detect(input$metricclouds_positivenegative,"Description")==TRUE){
-      read.csv("data/sentiment_description.csv",header = T) %>% select(word,sentiment,n)
+      amzndf2 %>% select(word,sentiment,n)
       
     }else{
       
-      read.csv("data/sentiment_title.csv",header = T) %>% select(word,sentiment,n)
+      amzndf1 %>% select(word,sentiment,n)
     }
     
     

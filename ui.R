@@ -14,10 +14,9 @@ htmlTemplate(
   mainLogo = getExternalLink("https://appsilon.com/", "main", consts$appsilonLogo),
   dashboardLogo = getExternalLink("https://shiny.rstudio.com/", "dashboard", consts$shinyLogo),
   selectYear = downloadButton("downloadData", "Export"),
-  selectMonth = actionButton("prev-report","Preview"),
-  previousTimeRange =  actionButton("reportgen","Report",icon = icon("file-download")),
-  sendMail =  actionButton("smail","Email",icon = icon("email")),
-  
+  # previousTimeRange  =actionLink("smail","Email",icon = icon("mail-bulk")),
+  selectMonth =  downloadButton("reportGen", "Report(docx)"),
+
   salesSummary = metric_summary$ui("sales"),
   productionSummary = metric_summary$ui("production"),
   usersSummary =metric_summary$ui("users"),
@@ -31,4 +30,6 @@ htmlTemplate(
   
   
   marketplace_website = consts$marketplace_website
+  
+  
 )
