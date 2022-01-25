@@ -4,6 +4,7 @@ library(mailR)
 library(mailR)
 library(reactable)# for NLP
 library(plotly)
+library(shinyjs)
 library(stringr) # to deal with strings
 library(wordcloud) # to render wordclouds
 library(knitr) # for tables

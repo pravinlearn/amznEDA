@@ -4,37 +4,46 @@
 
 server <- function(input, output, session) {
   
-   
+   # observeEvent(input$smail,{
+   #   showModal
+   # })
 
 
-  generesCountfile_react <- reactive({
-    read.csv("data/GeneresCount.csv",header = T)
-  }) 
- 
+  dataModal <- function(failed = FALSE) {
+    modalDialog(
+      textInput("dataset", "Choose data set",
+                placeholder = 'Try "mtcars" or "abc"'
+      ),
+      span('(Try the name of a valid data object like "mtcars", ',
+           'then a name of a non-existent object like "abc")'),
+      if (failed)
+        div(tags$b("Invalid name of data object", style = "color: red;")),
+      
+      footer = tagList(
+        modalButton("Cancel"),
+        actionButton("ok", "OK")
+      )
+    )
+  }
   
-  sentititle_react <- reactive({
-    read.csv("data/sentiment_title.csv",header = T)
-  })   
-
-  
-  descripSentiment_react <- reactive({
-    read.csv("data/sentiment_description.csv",header = T)
-  }) 
+  observeEvent(input$smail, {
+  showModal(dataModal())
+  })
     
 
   metric_summary$init_server("sales",
-                             amzndf= amznEDA,type1 = "Movie",type2 = "TV Show")
+                             amzndf= amzn,type1 = "Movie",type2 = "TV Show")
   metric_summary$init_server("production",
-                             amzndf= amznEDA, type1= "TV Show",type2 ="Movie")
+                             amzndf= amzn, type1= "TV Show",type2 ="Movie")
   metric_summary$init_server("users",
-                             amzndf= amznEDA,type1 = "Movie",type2 = "TV Show")
+                             amzndf= amzn,type1 = "Movie",type2 = "TV Show")
   metric_summary$init_server("complaints",
-                             amzndf= amznEDA, type1= "TV Show",type2 ="Movie")
+                             amzndf= amzn, type1= "TV Show",type2 ="Movie")
   
-  time_chart$init_server("time_chart",amzndfs = amznEDA)
+  time_chart$init_server("time_chart",amzndfs = amzn)
   breakdown_chart$init_server("breakdown_chart",amzndf =generesCountfile)
-  breakdown_charts$init_server("breakdown_charts", amzndf = amznEDA)
-  map_chart$init_server("map_chart", amzndf = amznEDA)
+  breakdown_charts$init_server("breakdown_charts", amzndf = amzn)
+  map_chart$init_server("map_chart", amzndf = amzn)
   breakdown_chartstwo$init_server("breakdown_chartstwo",amzndf1 = sentititle,amzndf2 =descripSentiment)
   
 ###########################Download Datasets########
@@ -43,7 +52,7 @@ server <- function(input, output, session) {
       paste(Sys.time(), 'AmznPrime.csv', sep='')
     },
     content = function(file) {
-      write.csv(amznEDA, file, row.names = FALSE)
+      write.csv(amzn, file, row.names = FALSE)
     }
   )
 

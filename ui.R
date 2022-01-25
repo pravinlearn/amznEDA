@@ -5,16 +5,21 @@ source("utilities/getExternalLink.R")
 
 # Load constant variables
 consts <- use("constants.R")
-
 # Html template used to render UI
+fixedPage(
+  useShinyjs(),  # Include shinyjs
+  
+
 htmlTemplate(
+  
+
   "www/index.html",
   appTitle = consts$app_title,
   appVersion = consts$app_version,
   mainLogo = getExternalLink("https://appsilon.com/", "main", consts$appsilonLogo),
   dashboardLogo = getExternalLink("https://shiny.rstudio.com/", "dashboard", consts$shinyLogo),
   selectYear = downloadButton("downloadData", "Export"),
-  # previousTimeRange  =actionLink("smail","Email",icon = icon("mail-bulk")),
+   previousTimeRange  =actionButton("smail","Email",icon = icon("mail-bulk")),
   selectMonth =  downloadButton("reportGen", "Report(docx)"),
 
   salesSummary = metric_summary$ui("sales"),
@@ -32,4 +37,5 @@ htmlTemplate(
   marketplace_website = consts$marketplace_website
   
   
+)
 )
