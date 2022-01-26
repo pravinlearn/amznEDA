@@ -1,27 +1,25 @@
 
 
-
+######EmailPaswd####
+pass <- as.character("sen241697")
+####################
 
 server <- function(input, output, session) {
-  
-   # observeEvent(input$smail,{
-   #   showModal
-   # })
-
+ 
 
   dataModal <- function(failed = FALSE) {
     modalDialog(
-      textInput("dataset", "Choose data set",
-                placeholder = 'Try "mtcars" or "abc"'
+      img(src = "assets/icons/amznprime.png",width = "18%"),
+      br(),
+      br(),
+      
+      textInput("emil", label = NULL,
+                placeholder = 'Enter your gmail'
       ),
-      span('(Try the name of a valid data object like "mtcars", ',
-           'then a name of a non-existent object like "abc")'),
-      if (failed)
-        div(tags$b("Invalid name of data object", style = "color: red;")),
       
       footer = tagList(
         modalButton("Cancel"),
-        actionButton("ok", "OK")
+        actionButton("gomail", "Send")
       )
     )
   }
@@ -30,7 +28,71 @@ server <- function(input, output, session) {
   showModal(dataModal())
   })
     
-
+  observeEvent(input$gomail, {
+    if(str_detect(input$emil,"gmail") ==TRUE){
+      showModal( modalDialog(
+        img(src = "assets/icons/amznprime.png",width = "18%"),
+        br(),
+        br(),
+        
+        span("The Email has been Sending"),
+        footer = NULL
+        
+      ))
+      rmarkdown::render("Prototype_word.Rmd", output_format = "word_document", output_file ="data/Report.docx",
+                        # params = list(table = a1),
+                        envir = new.env(parent = globalenv()),clean=F,encoding="utf-8"
+      )
+      send.mail(from="praveenstudy7@gmail.com",
+                to=input$emil,
+                subject="Amzn Report",
+                body="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book",
+                html=T,
+                smtp=list(host.name = "smtp.gmail.com",
+                          port = 465,
+                          user.name = "praveenstudy7@gmail.com",
+                          passwd = pass,
+                          ssl = T),
+                authenticate=T,attach.files = "data/Report.docx")
+      
+      showModal( modalDialog(
+        img(src = "assets/icons/amznprime.png",width = "18%"),
+        br(),
+        br(),
+        
+        span("The email was sent sucessfully"),
+        
+      ))
+      
+    }else if(is.null(input$emil)==TRUE){
+      
+      
+      
+      
+      showModal( modalDialog(
+        img(src = "assets/icons/amznprime.png",width = "18%"),
+        br(),
+        br(),
+        span("Please Enter your gmail It Can't be Null..."),
+        
+      ))
+      
+    }else{
+    
+      
+      showModal( modalDialog(
+        img(src = "assets/icons/amznprime.png",width = "18%"),
+        br(),
+        br(),
+        span("It Supports only gmail account.."),
+        
+      ))
+      
+    }
+    
+    
+  })
+  
   metric_summary$init_server("sales",
                              amzndf= amzn,type1 = "Movie",type2 = "TV Show")
   metric_summary$init_server("production",
