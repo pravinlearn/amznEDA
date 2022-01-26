@@ -23,7 +23,7 @@ tables: yes
 
 # Sentiments By Title
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-2-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-2-1.png)
 
 
 
@@ -34,7 +34,7 @@ tables: yes
 
 # Sentiment By Description
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-3-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-3-1.png)
 
 
 
@@ -44,7 +44,7 @@ tables: yes
 
 # Top 5 Countries With Highest Content
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-4-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-4-1.png)
 
 \newpage
 
@@ -52,7 +52,7 @@ tables: yes
 
 # Least 5 Countries With Highest Content
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-5-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-5-1.png)
 
 \newpage
 
@@ -70,34 +70,34 @@ tables: yes
 
 # Wordcloud by Description
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-7-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-7-1.png)
 
 \newpage
 
 
 # Wordcloud by Title
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-8-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-8-1.png)
 
 
 \newpage
 # Positive Words Freq by Description
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-9-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-9-1.png)
 \newpage
 
 # Negative Words Freq by Description
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-10-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-10-1.png)
 
 
 \newpage
 
 # Positive Words Freq by Title
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-11-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-11-1.png)
 \newpage
 
 # Negative Words Freq by Title
 <div custom-style=Content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
-![](C:/Users/prave/AppData/Local/Temp/Rtmp8Qt5Ta/file5b7c1cce45a7_files/figure-docx/unnamed-chunk-12-1.png)
+![](data/Report_files/figure-docx/unnamed-chunk-12-1.png)

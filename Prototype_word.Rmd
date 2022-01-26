@@ -1,9 +1,9 @@
 ---
-title: "Amaznon Prime EDA Report"
+title: "Amazon Prime EDA Report"
 fontsize: 10pt
 output:
   word_document:
-    reference_docx: new_sample_test.docx
+    reference_docx: sampleword.docx
     fig_caption: yes
   pdf_document: default
   html_document:
