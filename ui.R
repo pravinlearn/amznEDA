@@ -18,20 +18,20 @@ htmlTemplate(
   appVersion = consts$app_version,
   mainLogo = getExternalLink("https://appsilon.com/", "main", consts$appsilonLogo),
   dashboardLogo = getExternalLink("https://shiny.rstudio.com/", "dashboard", consts$shinyLogo),
-  selectYear = downloadButton("downloadData", "Export"),
-   previousTimeRange  =actionButton("smail","Email",icon = icon("mail-bulk")),
-  selectMonth =  downloadButton("reportGen", "Report(docx)"),
+  downloaddata = downloadButton("downloadData", "Export"),
+   sendmail  =actionButton("smail","Email",icon = icon("mail-bulk")),
+  genreporting =  downloadButton("reportGen", "Report"),
 
-  salesSummary = metric_summary$ui("sales"),
-  productionSummary = metric_summary$ui("production"),
-  usersSummary =metric_summary$ui("users"),
-  complaintsSummary = metric_summary$ui("complaints"),
-  timeChart = time_chart$ui("time_chart"),
+  tvShowhits = metric_summary$ui("sales"),
+  tvShowflops = metric_summary$ui("production"),
+  movieHits =metric_summary$ui("users"),
+  movieFlop = metric_summary$ui("complaints"),
+  countrycontents = time_chart$ui("time_chart"),
   
-  breakdownChart = breakdown_chart$ui("breakdown_chart"),
-  countryMap = map_chart$ui("map_chart"),
-  breakdownCharts = breakdown_charts$ui("breakdown_charts"),
-  breakdownChartstwo = breakdown_chartstwo$ui("breakdown_chartstwo"),
+  gneresContent = breakdown_chart$ui("breakdown_chart"),
+  dataset_react = map_chart$ui("map_chart"),
+  text_analyz = breakdown_charts$ui("breakdown_charts"),
+  pos_neg_words = breakdown_chartstwo$ui("breakdown_chartstwo"),
   
   
   marketplace_website = consts$marketplace_website
